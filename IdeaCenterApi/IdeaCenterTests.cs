@@ -20,11 +20,14 @@ namespace IdeaCenterApi
         [SetUp]
         public void Setup()
         {
+            // Create options for authentication to the url
             var options = new RestClientOptions(_url)
             {
+                // Create new authenticator using JWT token
                 Authenticator = new JwtAuthenticator(_token)
             };
             
+            // Create new a instance of the Rest Client using the options
             this._client = new RestClient(options);
         }
 
