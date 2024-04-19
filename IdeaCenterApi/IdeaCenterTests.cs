@@ -55,7 +55,7 @@ namespace IdeaCenterApi
             }
             else
             {
-                throw new InvalidOperationException("Response status not OK");
+                throw new InvalidOperationException($"Response status {authResponse.StatusCode}");
             }
 
         }
