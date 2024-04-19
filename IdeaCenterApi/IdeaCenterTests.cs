@@ -19,7 +19,7 @@ namespace IdeaCenterApi
 
         public static string _lastCreatedIdeaId;
 
-        [SetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             var token = GetToken(email, password);
@@ -39,6 +39,7 @@ namespace IdeaCenterApi
         {
             var authClient = new RestClient(_url);
             var authRequest = new RestRequest("/User/Authentication", Method.Post);
+
             authRequest.AddJsonBody(new
             {
                 email = email,
