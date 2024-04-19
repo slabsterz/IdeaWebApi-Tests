@@ -12,23 +12,52 @@ namespace IdeaCenterApi
     public class ApiTests
     {
         private string _url = "http://softuni-qa-loadbalancer-2137572849.eu-north-1.elb.amazonaws.com:84/api";
-        private string _token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJKd3RTZXJ2aWNlQWNjZXNzVG9rZW4iLCJqdGkiOiI4OWI1NGM4Yi05N2IyLTRkM2QtOGI2OC1jYTVlY2VhN2ExZjkiLCJpYXQiOiIwNC8wOS8yMDI0IDEyOjA3OjU1IiwiVXNlcklkIjoiOTJkZTA3NjQtMTc2NC00YmYxLTgzYzctMDhkYzRmZWM4Yzc4IiwiRW1haWwiOiJ0ZXN0dGVzdEB0ZXN0LmNvbSIsIlVzZXJOYW1lIjoiVGVzdFVzZXJJZGVhIiwiZXhwIjoxNzEyNjg2MDc1LCJpc3MiOiJJZGVhQ2VudGVyX0FwcF9Tb2Z0VW5pIiwiYXVkIjoiSWRlYUNlbnRlcl9XZWJBUElfU29mdFVuaSJ9.Ln7a1eeBCtr0JAZ39VZ_cWE6wnfb8JDRChxdLOBwAS0";
         private RestClient _client;
+
+        private string email = "testtest@test.com";
+        private string password = "testuseridea";
 
         public static string _lastCreatedIdeaId;
 
         [SetUp]
         public void Setup()
         {
+            var token = GetToken(email, password);
+
             // Create options for authentication to the url
             var options = new RestClientOptions(_url)
             {
                 // Create new authenticator using JWT token
-                Authenticator = new JwtAuthenticator(_token)
+                Authenticator = new JwtAuthenticator(token)
             };
             
             // Create new a instance of the Rest Client using the options
             this._client = new RestClient(options);
+        }
+
+        private string GetToken(string email, string password)
+        {
+            var authClient = new RestClient(_url);
+            var authRequest = new RestRequest("/User/Authentication", Method.Post);
+            authRequest.AddJsonBody(new
+            {
+                email = email,
+                password = password
+            });
+
+            var authResponse = authClient.Execute(authRequest);
+
+            if(authResponse.StatusCode == HttpStatusCode.OK)
+            {
+                var authJson = JsonSerializer.Deserialize<AuthResponse>(authResponse.Content);
+
+                return authJson.AccessToken;
+            }
+            else
+            {
+                throw new InvalidOperationException("Response status not OK");
+            }
+
         }
 
         [Order(1)]
