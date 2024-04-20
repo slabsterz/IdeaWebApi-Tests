@@ -51,8 +51,14 @@ namespace IdeaCenterApi
             if(authResponse.StatusCode == HttpStatusCode.OK)
             {
                 var authJson = JsonSerializer.Deserialize<AuthResponse>(authResponse.Content);
+                var token = authJson.AccessToken;
 
-                return authJson.AccessToken;
+                if(string.IsNullOrWhiteSpace(token))
+                {
+                    throw new InvalidOperationException("Token is empty.");
+                }
+
+                return token;
             }
             else
             {
