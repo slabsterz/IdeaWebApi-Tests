@@ -5,9 +5,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace IdeaCenterApi
+namespace IdeaCenterApi.Models
 {
-    public class AuthResponse
+    public class AuthResponseDto
     {
         [JsonPropertyName("accessToken")]
         public string AccessToken { get; set; }

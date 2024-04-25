@@ -5,19 +5,19 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace IdeaCenterApi
+namespace IdeaCenterApi.Models
 {
-    public class ApiResponse
+    public class ApiResponseDto 
     {
         [JsonPropertyName("msg")]
         public string Msg { get; set; }
 
         [JsonPropertyName("idea")]
-        public Idea Idea { get; set; }
+        public IdeaDto Idea { get; set; }
 
-        public ApiResponse()
+        public ApiResponseDto() 
         {
-            Idea = new Idea();
+            Idea = new IdeaDto();
         }
     }
 }

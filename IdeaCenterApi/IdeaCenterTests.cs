@@ -4,7 +4,7 @@ using System.ComponentModel.Design.Serialization;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using IdeaCenterApi;
+using IdeaCenterApi.Models;
 
 
 namespace IdeaCenterApi
@@ -50,7 +50,7 @@ namespace IdeaCenterApi
 
             if(authResponse.StatusCode == HttpStatusCode.OK)
             {
-                var authJson = JsonSerializer.Deserialize<AuthResponse>(authResponse.Content);
+                var authJson = JsonSerializer.Deserialize<AuthResponseDto>(authResponse.Content);
                 var token = authJson.AccessToken;
 
                 if(string.IsNullOrWhiteSpace(token))
@@ -74,7 +74,7 @@ namespace IdeaCenterApi
             // Arrange
             var request = new RestRequest("/Idea/Create", Method.Post);
 
-            var ideaCreation = new Idea()
+            var ideaCreation = new IdeaDto()
             {
                 Title = "Test RestSharp",
                 Description = "Random Description",
@@ -84,7 +84,7 @@ namespace IdeaCenterApi
 
             // Act
             var response = await this._client.ExecuteAsync(request);
-            var responseJson = JsonSerializer.Deserialize<ApiResponse>(response.Content);
+            var responseJson = JsonSerializer.Deserialize<ApiResponseDto>(response.Content);
 
             // Assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -102,14 +102,14 @@ namespace IdeaCenterApi
             // Act
             var response = await this._client.ExecuteAsync(request);
 
-            var responseJson = JsonSerializer.Deserialize<List<Idea>>(response.Content);
+            var responseJson = JsonSerializer.Deserialize<List<IdeaDto>>(response.Content);
 
             var lastCreatedIdea = responseJson.LastOrDefault();
             _lastCreatedIdeaId = lastCreatedIdea.IdeaId;
 
             // Assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(responseJson.Count, Is.Positive);           
+            Assert.That(responseJson.Count, Is.AtLeast(1));           
 
         }
 
@@ -120,7 +120,7 @@ namespace IdeaCenterApi
             // Arrange
             var request = new RestRequest($"/Idea/Edit?ideaId={_lastCreatedIdeaId}", Method.Put);
 
-            var ideaToUpdate = new Idea()
+            var ideaToUpdate = new IdeaDto()
             {
                 Title = "Updated Title",
                 Description = "Updated Description"
@@ -130,7 +130,7 @@ namespace IdeaCenterApi
 
             // Act
             var response = await this._client.ExecuteAsync(request);
-            var responseJson = JsonSerializer.Deserialize<ApiResponse>(response.Content);
+            var responseJson = JsonSerializer.Deserialize<ApiResponseDto>(response.Content);
 
             // Assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
@@ -161,7 +161,7 @@ namespace IdeaCenterApi
             // Arrange
             var request = new RestRequest("/Idea/Create", Method.Post);
 
-            var ideaCreation = new Idea()
+            var ideaCreation = new IdeaDto()
             {            
                 Url = ""
             };
@@ -183,7 +183,7 @@ namespace IdeaCenterApi
             string invalidId = "invalidId134";
             var request = new RestRequest($"/Idea/Edit?ideaId={invalidId}", Method.Put);
 
-            var ideaToUpdate = new Idea()
+            var ideaToUpdate = new IdeaDto()
             {
                 Title = "Updated Title",
                 Description = "Updated Description"

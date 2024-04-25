@@ -5,9 +5,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace IdeaCenterApi
+namespace IdeaCenterApi.Models
 {
-    public class Idea
+    public class IdeaDto : IBaseIdeaModel
     {
         [JsonPropertyName("title")]
         public string Title { get; set; }
